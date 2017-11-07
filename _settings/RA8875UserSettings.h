@@ -244,7 +244,9 @@ DO NOT Exceed 23Mhz for RA8875! It will result in garbage on screen or run very 
 	#elif defined(USE_FT5206_TOUCH) && !defined(USE_RA8875_TOUCH)
 		#include "Wire.h"//include the support for FT5206
 		static const uint8_t _FT5206REgisters[9] = {
-			0x16,0x3C,0xE9,0x01,0x01,0xA0,0x0A,0x06,0x28
+//			0x16,0x3C,0xE9,0x01,0x01,0xA0,0x0A,0x06,0x28
+//      0x3C,0x30,0x02,0x5C,0x0A, 0x02,0x00,0x02,0x0C
+        70, 60, 16, 60, 10, 20, 0, 2, 12
 		};
 	#elif !defined(USE_FT5206_TOUCH) && defined(USE_RA8875_TOUCH)
 		#include "_settings/RA8875Calibration.h"

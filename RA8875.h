@@ -196,7 +196,7 @@ class RA8875 : public Print {
 	// void 		debugData(uint16_t data,uint8_t len=8);
 	// void 		showLineBuffer(uint8_t data[],int len);
 //------------- INSTANCE -------------------------------------------------------------------
-	#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3.0, Teensy 3.1
+	#if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined (__MK66FX1M0__) //Teensy 3.0, Teensy 3.1, Teensy 3.2, Teensy 3.5, Teensy 3.6 
 		RA8875(const uint8_t CSp,const uint8_t RSTp=255,const uint8_t mosi_pin=11,const uint8_t sclk_pin=13,const uint8_t miso_pin=12);
 	#elif defined(__MKL26Z64__)//TeensyLC with FT5206_TOUCH
 		RA8875(const uint8_t CSp,const uint8_t RSTp=255,const uint8_t mosi_pin=11,const uint8_t sclk_pin=13,const uint8_t miso_pin=12);
@@ -280,6 +280,8 @@ class RA8875 : public Print {
 	void 		setFontFullAlign(boolean align);//mmmm... doesn't do nothing! Have to investigate
 	uint8_t 	getFontWidth(boolean inColums=false);
 	uint8_t 	getFontHeight(boolean inRows=false);
+  int16_t 	getStringWidth(const char* buffer,uint16_t len=0) { return _STRlen_helper(buffer,len); }
+  int16_t   getSpaceWidth() { return _spaceCharWidth * _scaleX; }
 	//----------FONT -------------------------------------------------------------------------
 	void		setExternalFontRom(enum RA8875extRomType ert, enum RA8875extRomCoding erc,enum RA8875extRomFamily erf=STANDARD);
 	void 		setFont(enum RA8875fontSource s);//INT,EXT (if you have a chip installed)

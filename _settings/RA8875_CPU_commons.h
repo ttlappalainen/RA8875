@@ -61,10 +61,10 @@ Part of RA8875 library from https://github.com/sumotoy/RA8875
 	#include "Arduino.h"
 	#include <math.h>
 	#include <avr/pgmspace.h>
-#elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MKL26Z64__)
+#elif defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MKL26Z64__) || defined(__MK64FX512__) || defined (__MK66FX1M0__)
 /* 
 --------------------------------------------------------------
-			TEENSY 3, TEENSY 3.1, TEENSY 3.2, TEENSY LC
+			TEENSY 3, TEENSY 3.1, TEENSY 3.2, TEENSY LC, TEENSY 3.5, Teensy 3.6
 	Fully supported (tested)
 --------------------------------------------------------------
 */

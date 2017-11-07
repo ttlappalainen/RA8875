@@ -62,8 +62,8 @@ Bit:	Called by:		In use:
 	Teensy CS SPI1:[MOSI1(0) MISO1(1) CLK1(20) CS1(6)]
 */
 /**************************************************************************/
-//------------------------------TEENSY 3/3.1 ---------------------------------------
-#if defined(__MK20DX128__) || defined(__MK20DX256__)	
+//------------------------------TEENSY 3/3.1/3.2/3.5/3.6 ---------------------------------------
+#if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined (__MK66FX1M0__)	
 	RA8875::RA8875(const uint8_t CSp,const uint8_t RSTp,const uint8_t mosi_pin,const uint8_t sclk_pin,const uint8_t miso_pin)
 	{
 		_mosi = mosi_pin;
@@ -345,7 +345,7 @@ void RA8875::begin(const enum RA8875sizes s,uint8_t colors)
 	_INTC1_Reg = 0b00000000;
 
 	//------------------------------- Start SPI initialization ------------------------------------------
-	#if defined(__MK20DX128__) || defined(__MK20DX256__)//Teensy 3,3.1
+	#if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MK64FX512__) || defined (__MK66FX1M0__) //Teensy 3,3.1
 		//always uses SPI transaction
 		if ((_mosi == 11 || _mosi == 7) && (_miso == 12 || _miso == 8) && (_sclk == 13 || _sclk == 14)) {//valid SPI pins?
 			if (_mosi != 11) SPI.setMOSI(_mosi);
@@ -3425,7 +3425,7 @@ void RA8875::getPixels(uint16_t * p, uint32_t count, int16_t x, int16_t y)
 /**************************************************************************/
 void RA8875::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color)
 {
-	if ((x0 == x1 && y0 == y1) || ((x1 - x0 == 1) && (y1 - y0 == 1))) {//NEW
+	if ( (x0>x1?x0-x1:x1-x0)<2 && (y0>y1?y0-y1:y1-y0)<2 ) {//NEW fix, did not test both orders
 		drawPixel(x0,y0,color);
 		return;
 	}
@@ -4247,14 +4247,15 @@ void RA8875::_triangle_helper(int16_t x0, int16_t y0, int16_t x1, int16_t y1, in
 	
 	if (_portrait) {swapvals(x0,y0); swapvals(x1,y1); swapvals(x2,y2);}
 	
-	if (x0 == x1 && y0 == y1){
-		drawLine(x0, y0, x2, y2,color);
+	if (x0 == x1 && y0 == y1) {
+    if ( x0 == x2 && y0 == y2 ) {
+      drawPixel(x0, y0, color);
+    } else {
+		  drawLine(x0, y0, x2, y2,color);
+    }
 		return;
-	} else if (x0 == x2 && y0 == y2){
+	} else if (x0 == x2 && y0 == y2) {
 		drawLine(x0, y0, x1, y1,color);
-		return;
-	} else if (x0 == x1 && y0 == y1 && x0 == x2 && y0 == y2) {//new
-        drawPixel(x0, y0, color);
 		return;
 	}
 	
@@ -5084,7 +5085,7 @@ uint8_t RA8875::getTouchLimit(void)
 void RA8875::_initializeFT5206(void)
 {
 	uint8_t i;
-	for (i=0x80;i<=0x89;i++){
+	for (i=0x80;i<0x89;i++){
 		_sendRegFT5206(i,_FT5206REgisters[i-0x80]);
 	}
 	_sendRegFT5206(0x00,0x00);//Device Mode
